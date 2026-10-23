@@ -22,15 +22,17 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
 
-    - name: Generate and Run Gradle Wrapper
+    - name: Download Gradle Wrapper & Build APK
       run: |
-        sudo apt-get update && sudo apt-get install -y gradle
-        gradle wrapper
+        curl -s -L -o gradle.zip https://services.gradle.org/distributions/gradle-8.5-bin.zip
+        unzip -q gradle.zip
+        ./gradle-8.5/bin/gradle wrapper --gradle-version 8.5
         chmod +x gradlew
-        ./gradlew assembleDebug --stacktrace
+        ./gradlew assembleDebug --no-daemon
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: RideFilterPro-APK
         path: app/build/outputs/apk/debug/app-debug.apk
+description: 
